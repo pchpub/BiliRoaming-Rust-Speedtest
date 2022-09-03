@@ -3,24 +3,6 @@ name: ci_ubuntu
 on:
   push:
     branches: [ "main" ]
-    paths-ignore:
-      - '**.md'
-      - 'LICENSE'
-      - 'config.example.**'
-      - '**.sh'
-      - '**.json'
-      - '**.yml'
-      - '!.github/workflows/**'
-  pull_request:
-    branches: [ "main" ]
-    paths-ignore:
-      - '**.md'
-      - 'LICENSE'
-      - 'config.example.**'
-      - '**.sh'
-      - '**.json'
-      - '**.yml'
-      - '!.github/workflows/**'
 
 env:
   CARGO_TERM_COLOR: always
