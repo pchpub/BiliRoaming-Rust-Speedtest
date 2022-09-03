@@ -1,4 +1,4 @@
-name: ci
+name: ci_unknown-linux-musl
 
 on:
   push:
@@ -44,6 +44,6 @@ jobs:
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2.2.2
       with:
-        name: biliroaming-rust-server-${{ github.run_number }}
+        name: biliroaming-rust-speedtest-${{ github.run_number }}
         path: |
           ./target/x86_64-unknown-linux-musl/fast/biliroaming_rust_speedtest
