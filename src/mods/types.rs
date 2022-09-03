@@ -7,7 +7,7 @@ pub struct Config {
     pub user_agent: String,
     pub access_key: String,
     pub access_token: String,
-    pub expire_time: String,
+    pub expire_time: u64,
     pub version_code: String,
     pub version_name: String,
     pub servers: Vec<String>,

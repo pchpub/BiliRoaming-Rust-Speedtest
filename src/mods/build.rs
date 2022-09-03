@@ -3,14 +3,17 @@ use chrono::Local;
 use super::types::{Config, SpeedType};
 
 pub fn build_request(base_url: &str,speed_type: &SpeedType,config: &Config) -> Result<(String,Vec<String>),()> { //url & Headers
+    // println!("{}",base_url);
+    let base_url = idna::domain_to_ascii(base_url).unwrap();
+    // println!("{}",test);
     match speed_type {
-        SpeedType::CnApp => build_request_bili_app(base_url,speed_type,"266323",config),
-        SpeedType::HkApp => build_request_bili_app(base_url,speed_type,"425578",config),
-        SpeedType::TwApp => build_request_bili_app(base_url,speed_type,"285951",config),
-        SpeedType::ThApp => build_request_bstar(base_url,speed_type,"377544",config),
-        SpeedType::CnWeb => build_request_bili_web(base_url,speed_type,"266323",config),
-        SpeedType::HkWeb => build_request_bili_web(base_url,speed_type,"425578",config),
-        SpeedType::TwWeb => build_request_bili_web(base_url,speed_type,"285951",config),
+        SpeedType::CnApp => build_request_bili_app(&base_url,speed_type,"266323",config),
+        SpeedType::HkApp => build_request_bili_app(&base_url,speed_type,"425578",config),
+        SpeedType::TwApp => build_request_bili_app(&base_url,speed_type,"285951",config),
+        SpeedType::ThApp => build_request_bstar(&base_url,speed_type,"377544",config),
+        SpeedType::CnWeb => build_request_bili_web(&base_url,speed_type,"266323",config),
+        SpeedType::HkWeb => build_request_bili_web(&base_url,speed_type,"425578",config),
+        SpeedType::TwWeb => build_request_bili_web(&base_url,speed_type,"285951",config),
     }
 
     //Err(())

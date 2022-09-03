@@ -22,10 +22,11 @@ pub fn draw<P: AsRef<Path>>(
     let mut max_server_len = 0;
     for item in &sorted_results {
         if get_str_len(&item.0)>max_server_len {
-            max_server_len = item.0.len();
+            max_server_len = get_str_len(&item.0);
         }
     }
-    let wide = max_server_len*5+725+10; //temp
+    println!("{}", max_server_len);
+    let wide = max_server_len*12+725+10; //temp
 
     let mut img: RgbImage = ImageBuffer::from_fn(
         wide as u32,
@@ -110,10 +111,10 @@ pub fn draw<P: AsRef<Path>>(
         &font,
     )
     .unwrap_or_default();
-    let server_name_len = max_server_len*5;
+    let server_name_len = max_server_len*12;
     draw_hollow_rect_mut(
         &mut img,
-        Rect::at(725, 34 * 2).of_size(server_name_len as u32, 65),
+        Rect::at(725, 34 * 2).of_size((server_name_len) as u32, 65),
         Rgb([0, 0, 0]),
     );
     draw_text(
@@ -160,11 +161,13 @@ pub fn draw<P: AsRef<Path>>(
             let color: [u8;3];
             match &item.1[&areas[index as usize]] {
                 Ok(value) => {
-                    context = format!("{:.1}",value);
-                    if value >= &500.0 {
+                    context = format!("{:.0}ms",value);
+                    if value >= &700.0 {
                         color = [255,0,0];
+                    }else if value <= &200.0{
+                        color = [0,255,0];
                     }else{
-                        color = [((value/500.0) *256.0) as u8, ((1.0-value/500.0)*256.0) as u8  ,0];
+                        color = [(((value-200.0)/500.0) *256.0) as u8, ((1.0-(value-200.0)/500.0)*256.0) as u8  ,0];
                     }
                 },
                 Err(value) => {
@@ -184,31 +187,48 @@ pub fn draw<P: AsRef<Path>>(
             )
             .unwrap_or_default();
         }
+        draw_little_hollow_rect(&mut img, &[0,0,0], 612, 34 * (4+row), 111, 30).unwrap_or_default();
+        let context: String;
+        let color: [u8;3];
+        match &item.2 {
+            Ok(value) => {
+                context = format!("{:.1}ms",value);
+                if value >= &500.0 {
+                    color = [255,0,0];
+                }else{
+                    color = [((value/500.0) *256.0) as u8, ((1.0-value/500.0)*256.0) as u8  ,0];
+                }
+            },
+            Err(value) => {
+                context = value.clone();
+                color = [255,0,0];
+            },
+        }
+        draw_text(
+            &mut img,
+            &context,
+            true,
+            &color,
+            612+ 111/2,
+            34 * (4+row)+7,
+            20.0,
+            &font,
+        )
+        .unwrap_or_default();
+        draw_little_hollow_rect(&mut img, &[0,0,0], 725, 34 * (4+row), server_name_len as u32, 30).unwrap_or_default();
+        draw_text(
+            &mut img,
+            &item.0,
+            false,
+            &[0, 0, 0],
+            725+4,
+            34 * (4+row)+7,
+            20.0,
+            &font,
+        )
+        .unwrap_or_default();
         row += 1;
     }
-    //draw_hollow_rect_mut(&mut img, Rect::at(10, 34 * 2).of_size((wide-20) as u32, 34 * (sorted_results.len() as u32)), Rgb([0,0,0]));
-
-    // draw_text_mut(
-    //     &mut img,
-    //     Rgb::from([0, 0, 0]),
-    //     wide / 2 - get_str_len(&config.title) * 25 / 4,
-    //     10,
-    //     Scale::uniform(25.0),
-    //     &font,
-    //     &config.title,
-    // );
-
-    // println!("{}", 512 - get_str_len(&text) * 100 / 2);
-    // let x = 512 - get_str_len(&text) * 50 / 2;
-    // draw_text_mut(
-    //     &mut img,
-    //     Rgb::from([255, 0, 0]),
-    //     x,
-    //     10,
-    //     Scale::uniform(100.0),
-    //     &font,
-    //     &text,
-    // );
 
     img.save(file_name.as_ref()).unwrap();
     Ok(())
@@ -229,6 +249,16 @@ fn draw_text(
             img,
             Rgb::from(color.to_owned()),
             x - ((get_str_len(content) as f32) * scale / 4.0) as i32,
+            y,
+            Scale::uniform(scale),
+            &font,
+            content,
+        );
+    }else{
+        draw_text_mut(
+            img,
+            Rgb::from(color.to_owned()),
+            x,
             y,
             Scale::uniform(scale),
             &font,
