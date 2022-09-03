@@ -3,6 +3,7 @@ use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
+    pub title: String,
     pub user_agent: String,
     pub access_key: String,
     pub access_token: String,
@@ -11,9 +12,7 @@ pub struct Config {
     pub version_name: String,
     pub servers: Vec<String>,
     pub bili_app_key: String,
-    //pub bili_app_sec: String,
     pub bstar_app_key: String,
-    //pub bstar_app_sec: String,
 }
 
 #[derive(Hash, Clone)]
@@ -34,20 +33,6 @@ impl PartialEq for SpeedType {
 }
 
 impl Eq for SpeedType {}
-
-// impl Display for SpeedType { //不优雅!
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         match self {
-//             SpeedType::CnApp => todo!(),
-//             SpeedType::HkApp => todo!(),
-//             SpeedType::TwApp => todo!(),
-//             SpeedType::ThApp => todo!(),
-//             SpeedType::CnWeb => todo!(),
-//             SpeedType::HkWeb => todo!(),
-//             SpeedType::TwWeb => todo!(),
-//         }
-//     }
-// }
 
 impl SpeedType {
     pub fn area_name(&self) -> &str {

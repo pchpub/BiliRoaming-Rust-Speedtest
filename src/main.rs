@@ -67,7 +67,7 @@ fn main() {
                 match getwebpage(&url, &config.user_agent, &headers, true) {
                     Ok(value) => {
                         if value.0.as_str() == "200" {
-                            println!("1");
+                            //println!("1");
                             match serde_json::from_str::<serde_json::Value>(&value.1) {
                                 Ok(serde_value) => {
                                     if serde_value["code"].as_str().unwrap_or("404") == "0" {
@@ -90,6 +90,7 @@ fn main() {
                                 }
                             }
                         } else {
+                            println!("{}",value.1.as_str());
                             (*(speed_test_result.results.get_mut(server_url).unwrap()))
                                 .insert(area.clone(), Err(value.0.to_owned()));
                         }
@@ -106,7 +107,7 @@ fn main() {
         let ts2 = dt.timestamp();
         last_spend_time = (ts2 - ts1) as u64;
 
-        if let Err(_) = draw("result.png", &speed_test_result) {
+        if let Err(_) = draw("result.png",&config ,&speed_test_result) {
             println!("[Error] write result.png failed")
         }
     }

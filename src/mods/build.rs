@@ -41,7 +41,7 @@ fn build_request_bili_app(base_url: &str,speed_type: &SpeedType,ep_id: &str,conf
         "https://{base_url}/pgc/player/api/playurl?{unsigned_url}&sign={:x}",
         md5::compute(format!("{unsigned_url}{}",appkey_to_sec(&config.bili_app_key).unwrap()))
     );
-    Ok((signed_url,vec![format!("Build : {}",config.version_code),format!("x-from-biliroaming : {}",config.version_name)]))
+    Ok((signed_url,vec![format!("Build:{}",config.version_code),format!("x-from-biliroaming:{}",config.version_name)]))
 }
 
 fn build_request_bili_web(base_url: &str,speed_type: &SpeedType,ep_id: &str,config: &Config) -> Result<(String,Vec<String>),()>{
@@ -99,7 +99,7 @@ fn build_request_bstar(base_url: &str,speed_type: &SpeedType,ep_id: &str,config:
         "https://{base_url}/intl/gateway/v2/ogv/playurl?{unsigned_url}&sign={:x}",
         md5::compute(format!("{unsigned_url}{}",appkey_to_sec(&config.bili_app_key).unwrap()))
     );
-    Ok((signed_url,vec![format!("Build : {}",config.version_code),format!("x-from-biliroaming : {}",config.version_name)]))
+    Ok((signed_url,vec![format!("Build:{}",config.version_code),format!("x-from-biliroaming:{}",config.version_name)]))
 }
 
 fn appkey_to_sec(appkey:&str) -> Result<String, ()> {

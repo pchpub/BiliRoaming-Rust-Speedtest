@@ -1,4 +1,5 @@
 use chrono::prelude::*;
+use curl::Error;
 use curl::easy::{Easy, List};
 use std::string::String;
 use std::time::Duration;
@@ -11,6 +12,7 @@ pub fn getwebpage(
 ) -> Result<(String, String, f64), String> {
     let mut data = Vec::new();
     let mut handle = Easy::new();
+    println!("{:?}",curl::Version::get());
     let mut handle_headers = List::new();
     for item in headers.iter() {
         handle_headers.append(item).unwrap();
@@ -18,10 +20,11 @@ pub fn getwebpage(
     handle.http_headers(handle_headers).unwrap();
     handle.url(&url).unwrap();
     handle.follow_location(true).unwrap();
-    handle.ssl_verify_peer(false).unwrap();
+    handle.ssl_verify_peer(true).unwrap();
     handle.post(false).unwrap();
     handle.useragent(&user_agent).unwrap();
     handle.connect_timeout(Duration::new(20, 0)).unwrap();
+    handle.accept_encoding("gzip,deflate,br").unwrap();
     if !need_body {
         handle.nobody(true).unwrap();
     }
@@ -38,7 +41,8 @@ pub fn getwebpage(
         let ts1 = dt.timestamp_millis();
         match transfer.perform() {
             Ok(()) => (()),
-            _error => {
+            Err(value) => {
+                println!("{:?}",value);
                 return Err("-404".to_owned());
             }
         }
@@ -57,5 +61,6 @@ pub fn getwebpage(
         Ok(value) => format!("{}", value),
         Err(_) => "-404".to_owned(),
     };
+    println!("{}",getwebpage_string);
     Ok((response_code,getwebpage_string, time))
 }
