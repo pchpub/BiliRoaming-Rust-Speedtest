@@ -5,11 +5,14 @@ use super::types::SpeedTestResult;
 
 
 pub fn draw<P: AsRef<Path>>(file_name: P,speed_test_result:&SpeedTestResult) -> Result<(),()> {
-    todo!()
-    // let font_data: &[u8] = include_bytes!("../../fonts/MSYHMONO.ttf");
-    // let font: Font = Font::try_from_bytes(font_data).unwrap();
+    let font_data: &[u8] = include_bytes!("../../fonts/MSYHMONO.ttf");
+    let font: Font = Font::try_from_bytes(font_data).unwrap();
 
-    // let mut img: RgbImage = ImageBuffer::new(1024, 34 * 12);
+    let sorted_results = speed_test_result.sort_vec();
+    let mut img: RgbImage = ImageBuffer::from_fn(1024, 34 * ((sorted_results.len() as u32)+3),|x,y|{
+        image::Rgb([0,0,0])
+    });
+
     // // println!("{}", 512 - get_str_len(&text) * 100 / 2);
     // // let x = 512 - get_str_len(&text) * 50 / 2;
     // // draw_text_mut(
@@ -21,8 +24,9 @@ pub fn draw<P: AsRef<Path>>(file_name: P,speed_test_result:&SpeedTestResult) -> 
     // //     &font,
     // //     &text,
     // // );
-    // //img.save(file_name.as_ref()).unwrap();
-    // Ok(())
+
+    img.save(file_name.as_ref()).unwrap();
+    Ok(())
 }
 
 fn get_str_len(text: &str) -> i32 {

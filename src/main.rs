@@ -49,6 +49,7 @@ fn main() {
                 false,
             ) {
                 Ok(value) => {
+                    println!("{}", value.0.as_str());
                     if value.0.as_str() == "200" {
                         server_urls.push(server_url.to_string());
                     }
@@ -61,10 +62,12 @@ fn main() {
 
         for area in &areas {
             for server_url in &server_urls {
-                let (url, headers) = build_request(&area, &config).unwrap();
+                let (url, headers) = build_request(server_url,&area, &config).unwrap();
+                println!("{}", url.to_string());
                 match getwebpage(&url, &config.user_agent, &headers, true) {
                     Ok(value) => {
                         if value.0.as_str() == "200" {
+                            println!("1");
                             match serde_json::from_str::<serde_json::Value>(&value.1) {
                                 Ok(serde_value) => {
                                     if serde_value["code"].as_str().unwrap_or("404") == "0" {

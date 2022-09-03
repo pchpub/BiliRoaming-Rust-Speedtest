@@ -2,21 +2,21 @@ use chrono::Local;
 
 use super::types::{Config, SpeedType};
 
-pub fn build_request(speed_type: &SpeedType,config: &Config) -> Result<(String,Vec<String>),()> { //url & Headers
+pub fn build_request(base_url: &str,speed_type: &SpeedType,config: &Config) -> Result<(String,Vec<String>),()> { //url & Headers
     match speed_type {
-        SpeedType::CnApp => build_request_bili_app(speed_type,config),
-        SpeedType::HkApp => build_request_bili_app(speed_type,config),
-        SpeedType::TwApp => build_request_bili_app(speed_type,config),
-        SpeedType::ThApp => build_request_bstar(speed_type,config),
-        SpeedType::CnWeb => build_request_bili_web(speed_type,config),
-        SpeedType::HkWeb => build_request_bili_web(speed_type,config),
-        SpeedType::TwWeb => build_request_bili_web(speed_type,config),
+        SpeedType::CnApp => build_request_bili_app(base_url,speed_type,"266323",config),
+        SpeedType::HkApp => build_request_bili_app(base_url,speed_type,"425578",config),
+        SpeedType::TwApp => build_request_bili_app(base_url,speed_type,"285951",config),
+        SpeedType::ThApp => build_request_bstar(base_url,speed_type,"377544",config),
+        SpeedType::CnWeb => build_request_bili_web(base_url,speed_type,"266323",config),
+        SpeedType::HkWeb => build_request_bili_web(base_url,speed_type,"425578",config),
+        SpeedType::TwWeb => build_request_bili_web(base_url,speed_type,"285951",config),
     }
 
     //Err(())
 }
 
-fn build_request_bili_app(speed_type: &SpeedType,config: &Config) -> Result<(String,Vec<String>),()> {
+fn build_request_bili_app(base_url: &str,speed_type: &SpeedType,ep_id: &str,config: &Config) -> Result<(String,Vec<String>),()> {
     let dt = Local::now();
     let ts = dt.timestamp();
     let ts_str = ts.to_string();
@@ -26,7 +26,7 @@ fn build_request_bili_app(speed_type: &SpeedType,config: &Config) -> Result<(Str
         ("area",speed_type.area_name()),
         ("build", "6800300"),
         ("device", "android"),
-        ("ep_id","266323"),//可以放到config.json里但没必要
+        ("ep_id",ep_id),//可以放到config.json里但没必要
         ("fnval", "464"),
         ("fnver", "0"),
         ("fourk", "1"),
@@ -38,13 +38,13 @@ fn build_request_bili_app(speed_type: &SpeedType,config: &Config) -> Result<(Str
     let unsigned_url = qstring::QString::new(query_vec);
     let unsigned_url = format!("{unsigned_url}");
     let signed_url = format!(
-        "https://api.bilibili.com/pgc/player/api/playurl?{unsigned_url}&sign={:x}",
+        "https://{base_url}/pgc/player/api/playurl?{unsigned_url}&sign={:x}",
         md5::compute(format!("{unsigned_url}{}",appkey_to_sec(&config.bili_app_key).unwrap()))
     );
     Ok((signed_url,vec![format!("Build : {}",config.version_code),format!("x-from-biliroaming : {}",config.version_name)]))
 }
 
-fn build_request_bili_web(speed_type: &SpeedType,config: &Config) -> Result<(String,Vec<String>),()>{
+fn build_request_bili_web(base_url: &str,speed_type: &SpeedType,ep_id: &str,config: &Config) -> Result<(String,Vec<String>),()>{
     let dt = Local::now();
     let ts = dt.timestamp();
     let ts_str = ts.to_string();
@@ -54,7 +54,7 @@ fn build_request_bili_web(speed_type: &SpeedType,config: &Config) -> Result<(Str
         ("area",speed_type.area_name()),
         ("build", "6800300"),
         ("device", "android"),
-        ("ep_id","266323"),//可以放到config.json里但没必要
+        ("ep_id",ep_id),//可以放到config.json里但没必要
         ("fnval", "464"),
         ("fnver", "0"),
         ("fourk", "1"),
@@ -69,11 +69,11 @@ fn build_request_bili_web(speed_type: &SpeedType,config: &Config) -> Result<(Str
     //     "https://api.bilibili.com/pgc/player/api/playurl?{unsigned_url}&sign={:x}",
     //     md5::compute(format!("{unsigned_url}{}",appkey_to_sec(&config.bili_app_key).unwrap()))
     // );
-    let unsigned_url = format!("https://api.bilibili.com/pgc/player/web/playurl?{unsigned_url}"); //Shadow
+    let unsigned_url = format!("https://{base_url}/pgc/player/web/playurl?{unsigned_url}"); //Shadow
     Ok((unsigned_url,vec![]))
 }
 
-fn build_request_bstar(speed_type: &SpeedType,config: &Config) -> Result<(String,Vec<String>),()>{
+fn build_request_bstar(base_url: &str,speed_type: &SpeedType,ep_id: &str,config: &Config) -> Result<(String,Vec<String>),()>{
     let dt = Local::now();
     let ts = dt.timestamp();
     let ts_str = ts.to_string();
@@ -83,7 +83,7 @@ fn build_request_bstar(speed_type: &SpeedType,config: &Config) -> Result<(String
         ("area",speed_type.area_name()),
         ("build", "6800300"),
         ("device", "android"),
-        ("ep_id","266323"),//可以放到config.json里但没必要
+        ("ep_id",ep_id),
         ("fnval", "464"),
         ("fnver", "0"),
         ("fourk", "1"),
@@ -96,7 +96,7 @@ fn build_request_bstar(speed_type: &SpeedType,config: &Config) -> Result<(String
     let unsigned_url = qstring::QString::new(query_vec);
     let unsigned_url = format!("{unsigned_url}");
     let signed_url = format!(
-        "https://app.biliintl.com/intl/gateway/v2/ogv/playurl?{unsigned_url}&sign={:x}",
+        "https://{base_url}/intl/gateway/v2/ogv/playurl?{unsigned_url}&sign={:x}",
         md5::compute(format!("{unsigned_url}{}",appkey_to_sec(&config.bili_app_key).unwrap()))
     );
     Ok((signed_url,vec![format!("Build : {}",config.version_code),format!("x-from-biliroaming : {}",config.version_name)]))

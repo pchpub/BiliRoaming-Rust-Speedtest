@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
@@ -16,7 +16,7 @@ pub struct Config {
     //pub bstar_app_sec: String,
 }
 
-#[derive(Hash,Clone)]
+#[derive(Hash, Clone)]
 pub enum SpeedType {
     CnApp,
     HkApp,
@@ -75,7 +75,9 @@ impl SpeedTestResult {
             results: HashMap::with_capacity(server_lists.len()),
         };
         for server_url in server_lists {
-            new_data.results.insert(server_url.to_owned(), HashMap::new());
+            new_data
+                .results
+                .insert(server_url.to_owned(), HashMap::new());
         }
         new_data
     }
@@ -87,7 +89,8 @@ impl SpeedTestResult {
         HashMap<SpeedType, Result<f64, String>>,
         Result<f64, String>,
     )> {
-        let input_data: Vec<(String, HashMap<SpeedType, Result<f64, String>>)> = self.results.clone().into_iter().collect();
+        let input_data: Vec<(String, HashMap<SpeedType, Result<f64, String>>)> =
+            self.results.clone().into_iter().collect();
         let mut return_sort_vec: Vec<(
             String,
             HashMap<SpeedType, Result<f64, String>>,
@@ -108,11 +111,15 @@ impl SpeedTestResult {
             if alive_num == 0 {
                 return_sort_vec.push((item.0.to_owned(), item.1.clone(), Err("寄".to_string())));
             } else {
-                return_sort_vec.push((item.0.to_owned(), item.1.clone(), Ok(time_sum / alive_num as f64)));
+                return_sort_vec.push((
+                    item.0.to_owned(),
+                    item.1.clone(),
+                    Ok(time_sum / alive_num as f64),
+                ));
             }
         }
         return_sort_vec.sort_by_key(|v| match v.2 {
-            Ok(value) => (value*100.0) as u64,
+            Ok(value) => (value * 100.0) as u64,
             Err(_) => 20000,
         });
         return_sort_vec
