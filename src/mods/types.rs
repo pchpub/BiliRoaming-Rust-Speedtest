@@ -104,7 +104,7 @@ impl SpeedTestResult {
             }
         }
         return_sort_vec.sort_by_key(|v| match v.2 {
-            Ok(value) => (value * 100.0) as u64,
+            Ok(value) => value as u64,
             Err(_) => 20000,
         });
         return_sort_vec

@@ -12,7 +12,6 @@ pub fn getwebpage(
 ) -> Result<(String, String, f64), String> {
     let mut data = Vec::new();
     let mut handle = Easy::new();
-    //println!("{:?}",curl::Version::get());
     let mut handle_headers = List::new();
     for item in headers.iter() {
         handle_headers.append(item).unwrap();
@@ -44,7 +43,7 @@ pub fn getwebpage(
         }
     }
     //println!("{:?}",handle.connect_time());
-    let time = handle.connect_time().unwrap().as_secs_f64() * 1000.0;
+    let time = (handle.total_time().unwrap().as_secs_f64()-handle.namelookup_time().unwrap().as_secs_f64())*1000.0;
     let getwebpage_string: String = match String::from_utf8(data) {
         Ok(value) => value,
         Err(_) => {
