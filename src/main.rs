@@ -127,7 +127,9 @@ fn main() {
     // last_spend_time = (ts2 - ts1) as u64;
 
     if let Err(_) = draw("result.png", &config, &speed_test_result) {
-        println!("[Error] write result.png failed")
+        println!("[Error] write result.png failed");
+    }else{
+        println!("[Ok] Finished");
     }
     // }
 

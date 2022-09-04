@@ -1,6 +1,6 @@
 [package]
 name = "biliroaming_rust_speedtest"
-version = "0.1.1"
+version = "0.1.0"
 edition = "2021"
 
 [dependencies]
@@ -13,6 +13,7 @@ serde = {version ="1.0.144",features = ["derive"]}
 chrono = "0.4.22"
 qstring = "0.7.2"
 md5 = "0.7.0"
+idna = "0.2.3"
 #brotli = "3.3.4"
 
 [profile.fast]

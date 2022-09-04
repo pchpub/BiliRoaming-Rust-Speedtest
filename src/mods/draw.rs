@@ -13,8 +13,6 @@ pub fn draw<P: AsRef<Path>>(
     config: &Config,
     speed_test_result: &SpeedTestResult,
 ) -> Result<(), ()> {
-    
-
     let font_data: &[u8] = include_bytes!("../../fonts/MSYHMONO.ttf");
     let font: Font = Font::try_from_bytes(font_data).unwrap();
 
@@ -25,7 +23,7 @@ pub fn draw<P: AsRef<Path>>(
             max_server_len = get_str_len(&item.0);
         }
     }
-    println!("{}", max_server_len);
+    //println!("{}", max_server_len);
     let wide = max_server_len*12+725+10; //temp
 
     let mut img: RgbImage = ImageBuffer::from_fn(
@@ -35,7 +33,7 @@ pub fn draw<P: AsRef<Path>>(
             // if y == 34 * 2 && x > 10 && x < wide as u32 - 10 {
             //     image::Rgb([0, 0, 0])
             // } else {
-                image::Rgb([255, 255, 255])
+                image::Rgb([41, 41, 41])
             //}
         },
     );
@@ -44,7 +42,7 @@ pub fn draw<P: AsRef<Path>>(
         &mut img,
         &config.title,
         true,
-        &[0, 0, 0],
+        &[255, 255, 255],
         wide as i32 / 2,
         10,
         25.0,
@@ -56,7 +54,7 @@ pub fn draw<P: AsRef<Path>>(
         &mut img,
         &dt.format("%Y-%m-%d %H:%M:%S").to_string(),
         true,
-        &[0, 0, 0],
+        &[255, 255, 255],
         wide as i32 / 2,
         50,
         18.0,
@@ -66,13 +64,13 @@ pub fn draw<P: AsRef<Path>>(
     draw_hollow_rect_mut(
         &mut img,
         Rect::at(10, 34 * 2).of_size(342, 33),
-        Rgb([0, 0, 0]),
+        Rgb([255, 255, 255]),
     );
     draw_text(
         &mut img,
         "安卓",
         true,
-        &[0, 0, 0],
+        &[255, 255, 255],
         10+342/2,
         34 * 2+9,
         20.0,
@@ -82,13 +80,13 @@ pub fn draw<P: AsRef<Path>>(
     draw_hollow_rect_mut(
         &mut img,
         Rect::at(354, 34 * 2).of_size(256, 33),
-        Rgb([0, 0, 0]),
+        Rgb([255, 255, 255]),
     );
     draw_text(
         &mut img,
         "WEB",
         true,
-        &[0, 0, 0],
+        &[255, 255, 255],
         354+256/2,
         34 * 2+9,
         20.0,
@@ -98,13 +96,13 @@ pub fn draw<P: AsRef<Path>>(
     draw_hollow_rect_mut(
         &mut img,
         Rect::at(612, 34 * 2).of_size(111, 65),
-        Rgb([0, 0, 0]),
+        Rgb([255, 255, 255]),
     );
     draw_text(
         &mut img,
         "平均",
         true,
-        &[0, 0, 0],
+        &[255, 255, 255],
         612+111/2,
         34 * 2+26,
         20.0,
@@ -115,13 +113,13 @@ pub fn draw<P: AsRef<Path>>(
     draw_hollow_rect_mut(
         &mut img,
         Rect::at(725, 34 * 2).of_size((server_name_len) as u32, 65),
-        Rgb([0, 0, 0]),
+        Rgb([255, 255, 255]),
     );
     draw_text(
         &mut img,
         "地址",
         true,
-        &[0, 0, 0],
+        &[255, 255, 255],
         (725+server_name_len/2)as i32,
         34 * 2+26,
         20.0,
@@ -130,12 +128,12 @@ pub fn draw<P: AsRef<Path>>(
     .unwrap_or_default();
     let area_name = ["CN","HK","TW","TH","CN","HK","TW"];
     for index in 0..7 {
-        draw_little_hollow_rect(&mut img, &[0,0,0], 10+86*index, 34 * 3+1, 84, 30).unwrap_or_default();
+        draw_little_hollow_rect(&mut img, &[255, 255, 255], 10+86*index, 34 * 3+1, 84, 30).unwrap_or_default();
         draw_text(
             &mut img,
             area_name[index as usize],
             true,
-            &[0, 0, 0],
+            &[255, 255, 255],
             10+86*index+84/2 -1,
             34 * 3+8,
             20.0,
@@ -156,23 +154,23 @@ pub fn draw<P: AsRef<Path>>(
     let mut row = 0;
     for item in sorted_results {
         for index in 0..7 {
-            draw_little_hollow_rect(&mut img, &[0,0,0], 10+86*index, 34 * (4+row), 84, 30).unwrap_or_default();
+            draw_little_hollow_rect(&mut img, &[255, 255, 255], 10+86*index, 34 * (4+row), 84, 30).unwrap_or_default();
             let context: String;
             let color: [u8;3];
             match &item.1[&areas[index as usize]] {
                 Ok(value) => {
                     context = format!("{:.0}ms",value);
                     if value >= &700.0 {
-                        color = [255,0,0];
+                        color = [200,0,0];
                     }else if value <= &200.0{
                         color = [0,255,0];
                     }else{
-                        color = [(((value-200.0)/500.0) *256.0) as u8, ((1.0-(value-200.0)/500.0)*256.0) as u8  ,0];
+                        color = [(((value-200.0)/500.0) *200.0) as u8, ((1.0-(value-200.0)/500.0)*256.0) as u8  ,0];
                     }
                 },
                 Err(value) => {
                     context = value.clone();
-                    color = [255,0,0];
+                    color = [200,0,0];
                 },
             }
             draw_text(
@@ -187,21 +185,21 @@ pub fn draw<P: AsRef<Path>>(
             )
             .unwrap_or_default();
         }
-        draw_little_hollow_rect(&mut img, &[0,0,0], 612, 34 * (4+row), 111, 30).unwrap_or_default();
+        draw_little_hollow_rect(&mut img, &[255, 255, 255], 612, 34 * (4+row), 111, 30).unwrap_or_default();
         let context: String;
         let color: [u8;3];
         match &item.2 {
             Ok(value) => {
                 context = format!("{:.1}ms",value);
                 if value >= &500.0 {
-                    color = [255,0,0];
+                    color = [200,0,0];
                 }else{
-                    color = [((value/500.0) *256.0) as u8, ((1.0-value/500.0)*256.0) as u8  ,0];
+                    color = [((value/500.0) *200.0) as u8, ((1.0-value/500.0)*256.0) as u8  ,0];
                 }
             },
             Err(value) => {
                 context = value.clone();
-                color = [255,0,0];
+                color = [200,0,0];
             },
         }
         draw_text(
@@ -215,12 +213,12 @@ pub fn draw<P: AsRef<Path>>(
             &font,
         )
         .unwrap_or_default();
-        draw_little_hollow_rect(&mut img, &[0,0,0], 725, 34 * (4+row), server_name_len as u32, 30).unwrap_or_default();
+        draw_little_hollow_rect(&mut img, &[255, 255, 255], 725, 34 * (4+row), server_name_len as u32, 30).unwrap_or_default();
         draw_text(
             &mut img,
             &item.0,
             false,
-            &[0, 0, 0],
+            &[255, 255, 255],
             725+4,
             34 * (4+row)+7,
             20.0,
