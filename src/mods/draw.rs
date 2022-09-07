@@ -165,7 +165,7 @@ pub fn draw<P: AsRef<Path>>(
                     }else if value <= &200.0{
                         color = [0,255,0];
                     }else{
-                        color = [(((value-200.0)/500.0) *200.0) as u8, ((1.0-(value-200.0)/500.0)*256.0) as u8  ,0];
+                        color = ms_to_color(value);
                     }
                 },
                 Err(value) => {
@@ -191,10 +191,12 @@ pub fn draw<P: AsRef<Path>>(
         match &item.2 {
             Ok(value) => {
                 context = format!("{:.1}ms",value);
-                if value >= &500.0 {
+                if value >= &700.0 {
                     color = [200,0,0];
+                }else if value <= &200.0{
+                    color = [0,255,0];
                 }else{
-                    color = [((value/500.0) *200.0) as u8, ((1.0-value/500.0)*256.0) as u8  ,0];
+                    color = ms_to_color(value);
                 }
             },
             Err(value) => {
@@ -294,4 +296,8 @@ fn get_str_len(text: &str) -> usize {
         }
     }
     len
+}
+
+fn ms_to_color(time: &f64)-> [u8;3] { 
+    [(((time-200.0)/500.0) *200.0) as u8, ((1.0-(time-200.0)/500.0)*256.0) as u8  ,0]
 }

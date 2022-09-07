@@ -42,8 +42,11 @@ pub fn getwebpage(
             }
         }
     }
-    //println!("{:?}",handle.connect_time());
+    // println!("[Debug] connect time : {:?}",handle.connect_time()); //康康connect_time 会不会有影响
+    // println!("[Debug] starttransfer_time : {:?}",handle.starttransfer_time());
     let time = (handle.total_time().unwrap().as_secs_f64()-handle.namelookup_time().unwrap().as_secs_f64())*1000.0;
+    //let time = (handle.starttransfer_time().unwrap().as_secs_f64()-handle.namelookup_time().unwrap().as_secs_f64())*1000.0;
+    //println!("[Debug]:{}",time);
     let getwebpage_string: String = match String::from_utf8(data) {
         Ok(value) => value,
         Err(_) => {
