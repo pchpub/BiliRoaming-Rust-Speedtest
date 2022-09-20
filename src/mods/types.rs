@@ -13,6 +13,10 @@ pub struct Config {
     pub servers: Vec<String>,
     pub bili_app_key: String,
     pub bstar_app_key: String,
+    pub ftp_url: String,
+    pub ftp_user: String,
+    pub ftp_password: String,
+    pub ftp_open : bool,
 }
 
 #[derive(Hash, Clone)]

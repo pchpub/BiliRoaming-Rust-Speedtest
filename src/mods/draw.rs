@@ -229,7 +229,6 @@ pub fn draw<P: AsRef<Path>>(
         .unwrap_or_default();
         row += 1;
     }
-
     img.save(file_name.as_ref()).unwrap();
     Ok(())
 }
